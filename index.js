@@ -10,7 +10,7 @@ const loginRouter=require("./auth/router")
 
 app.use(corsMiddleware);
 app.use(jsonParser);
-const port = 4000;
+const port = process.env.PORT||4000;
 app.use(userRouter);
 app.use(loginRouter)
 app.get("/", (req, res) => {
