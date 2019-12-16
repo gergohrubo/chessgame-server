@@ -7,14 +7,14 @@ const cors = require("cors");
 const corsMiddleware = cors();
 const loginRouter=require("./auth/router")
 const gameRouter=require("./game/router")
-const currentGameRouter=require("./joinGame/router")
+const playerRouter=require("./player/router")
 app.use(corsMiddleware);
 app.use(jsonParser);
 const port = process.env.PORT||4000;
 app.use(userRouter);
 app.use(loginRouter)
 app.use(gameRouter);
-app.use(currentGameRouter)
+app.use(playerRouter)
 app.get("/", (req, res) => {
   res.send("Blabla");
 });
