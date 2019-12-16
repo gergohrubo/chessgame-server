@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../db')
+const Game= require("../game/model")
 
-const CurrentGame= sequelize.define('game', {
+const CurrentGame= sequelize.define('currentgame', {
   username1:{
     type: Sequelize.STRING,
     allowNull: false
@@ -26,5 +27,6 @@ color2:{
   allowNull: false
 }
 })
+CurrentGame.belongsTo(Game)
 
 module.exports = CurrentGame
