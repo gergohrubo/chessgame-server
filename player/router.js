@@ -1,20 +1,41 @@
+const express = require("express");
 const Player = require("./model");
-const { Router } = require("express");
-const Game = require("../game/model");
-const User = require("../user/model");
-const router = new Router();
+const { Router } = express
 
-router.post("/player", async (req, res, next) => {
+
+function factory(stream){
+  const router = new Router();
+
+router.get("/player", async (req, res, next) => {
+  
   try {
-    const game = await Player.create(req.body);
-    res.json(game);
-  } catch (err) {
-    next(err);
+    const palyers = await Player.findAll();
+
+    res.send(palyers);
+  } catch (error) {
+    next(error)
   }
 });
-router.get("/player", async (req, res) => {
-  const player = await Player.findAll();
-  res.json(player);
-});
 
-module.exports = router;
+router.post("/player", async (req, res, next) =>{
+  try {
+    const player = await Player.create(req.body);
+
+const action={
+  type:"NEW_PLAYER",
+  payload:player
+}
+    const string=JSON.stringify(action)
+    stream.send(string)
+    res.send(palyer);
+  } catch (error) {
+    next(error);
+  }
+  
+})
+return router
+}
+
+
+
+module.exports = factory;

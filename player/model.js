@@ -13,3 +13,5 @@ color:{
 Game.belongsToMany(User, { through: Player })
 User.belongsToMany(Game, { through: Player })
 module.exports = Player
+
+
