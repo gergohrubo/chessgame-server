@@ -298,7 +298,7 @@ function factory(stream) {
       } else {
         await createBlackFigures(userId, req.body.gameId);
       }
-      const updatedGame = await Game.findByPk(req.body.gameId, { include: [{ model: User, attributes: ['id', 'name'] }] })
+      const updatedGame = await Game.findByPk(req.body.gameId, { include: [{ model: User, attributes: ['id', 'name'] }, Figure] })
 
       const action = {
         type: "UPDATE_GAME",
@@ -317,7 +317,7 @@ function factory(stream) {
     try {
       const game = {
         username: req.body.name,
-       
+
       };
       const newGame = await Game.create(game);
       const action = {
