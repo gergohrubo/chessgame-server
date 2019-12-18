@@ -22,10 +22,6 @@ function factory(stream) {
 
   router.post("/player", async (req, res, next) => {
 
-    // const auth = req.headers.authorization && req.headers.authorization.split(' ')
-    // if (auth && auth[0] === 'Bearer' && auth[1]) {
-    //   const data = toData(auth[1])
-    //   res.send({data})
     try {
       const { userId } = toData(req.body.jwt)
       const player = await Player.create({ userId, gameId: req.body.gameId });  //userId, gameId:req.body.gameId}
@@ -41,12 +37,7 @@ function factory(stream) {
     } catch (error) {
       next(error);
     }
-    // } 
-    // else {
-    //   res.status(401).send({
-    //     message: 'Please supply some valid credentials'
-    //   })
-    // }
+   
   })
 
   return router
