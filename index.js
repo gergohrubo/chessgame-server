@@ -9,6 +9,8 @@ const playerRouterFactory = require("./player/router");
 const stream = new Sse();
 const playerRouter = playerRouterFactory(stream);
 
+
+
 const userRouter = require("./user/router");
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
@@ -17,7 +19,8 @@ const corsMiddleware = cors();
 const loginRouter = require("./auth/router");
 const gameRouterFactory = require("./game/router");
 const gameRouter = gameRouterFactory(stream);
-const figureRouter = require("./figure/router");
+const figureFactory = require("./figure/router");
+const figureRouter = figureFactory(stream);
 
 app.use(corsMiddleware);
 app.use(jsonParser);

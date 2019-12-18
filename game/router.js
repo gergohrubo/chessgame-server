@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { toData } = require("../auth/jwt");
 const Game = require("./model");
-const router = new Router();
+
 const Player = require("../player/model");
 const Figure = require("../figure/model");
 const User = require('../user/model')
@@ -316,8 +316,8 @@ function factory(stream) {
   router.post("/game", async (req, res, next) => {
     try {
       const game = {
-        username1: req.body.name,
-        username2: null
+        username: req.body.name,
+       
       };
       const newGame = await Game.create(game);
       const action = {

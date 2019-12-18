@@ -1,32 +1,43 @@
 const { Router } = require("express");
 const Figure = require("./model");
-const router = new Router();
 
-router.put("/figure/move", async (req, res) => {
-  const figure = await Figure.findByPk({ where: { id: req.params.body.id } });
+function factory(stream) {
+  const router = new Router();
 
-  //     router.put("/movie/:id", (request, response, next) =>
-  // Movie.findByPk(request.params.id)
-  //   .then(movie => movie.update(request.body))
-  //   .then(movie => response.json(movie))
-  //   .catch(error => next(error))
-  // );
-});
-// router.post("/move", async (req, res) => {
-//   const oldFigure = await Move.findOne({where: {coordinate_X: req.body.coordinate_X, coordinate_Y: req.body.coordinate_Y}});
-//   if (oldFigure) {
-//     await Move.destroy({where: {id: oldFigure.id}});
-//   }
-//   await Move.update({x: req.body.x, y: req.body.y}, {where: {id: req.body.id}})
-//   const board = await Move.findAll({where: {gameid: req.body.gameid}})
-//   res.json(board);
-// });
+  router.put("/move", async (req, res, next) => {
+    try {
+      await Figure.destroy({
+        where: {
+          coordinate_X: req.body.coordinate_X,
+          coordinate_Y: req.body.coordinate_Y
+        }
+      });
+      await Figure.update(
+        {
+          coordinate_X: req.body.coordinate_X,
+          coordinate_Y: req.body.coordinate_Y
+        },
+        { where: { id: req.body.figureId } }
+      );
+      const board = await Figure.findAll({
+        where: { gameId: req.body.gameId }
+      });
 
-router.get("/figure/:gameId", async (req, res) => {
-  const figures = await Figure.findAll({
-    where: {game_id: res.params.gameId}
+      const action = {
+        type: "UPDATE_BOARD",
+        payload: board
+      };
+
+      const string = JSON.stringify(action);
+
+      stream.send(string);
+
+      res.send(board);
+    } catch (err) {
+      next(err);
+    }
   });
-  res.send(figures);
-});
+  return router;
+}
 
-module.exports = router;
+module.exports = factory;
