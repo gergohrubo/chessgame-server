@@ -4,7 +4,7 @@ const Game = require("./model");
 
 const Player = require("../player/model");
 const Figure = require("../figure/model");
-const User = require('../user/model')
+const User = require("../user/model");
 
 // router.get("/game", async (req, res) => {
 //   const game = await Game.findAll({ include: [{ model: User, attributes: ['id', 'name'] }] });
@@ -281,7 +281,6 @@ const createBlackFigures = async (userId, gameId) => {
   ]);
 };
 
-
 function factory(stream) {
   const router = new Router();
 
@@ -295,17 +294,23 @@ function factory(stream) {
       });
       if (req.body.color === "white") {
         await createWhiteFigures(userId, req.body.gameId);
+        Game.update(
+          { currentTurn: userId },
+          { where: { id: req.body.gameId } }
+        );
       } else {
         await createBlackFigures(userId, req.body.gameId);
       }
-      const updatedGame = await Game.findByPk(req.body.gameId, { include: [{ model: User, attributes: ['id', 'name'] }] })
+      const updatedGame = await Game.findByPk(req.body.gameId, {
+        include: [{ model: User, attributes: ["id", "name"] }]
+      });
 
       const action = {
         type: "UPDATE_GAME",
         payload: updatedGame
-      }
-      const string = JSON.stringify(action)
-      stream.send(string)
+      };
+      const string = JSON.stringify(action);
+      stream.send(string);
 
       res.send(player);
     } catch (error) {
@@ -316,22 +321,22 @@ function factory(stream) {
   router.post("/game", async (req, res, next) => {
     try {
       const game = {
-        username: req.body.name,
-       
+        username: req.body.name
       };
       const newGame = await Game.create(game);
       const action = {
         type: "NEW_GAME",
         payload: newGame
-      }
-      const string = JSON.stringify(action)
-      stream.send(string)
+      };
+
+      const string = JSON.stringify(action);
+      stream.send(string);
       res.send(newGame);
     } catch (error) {
       next(error);
     }
   });
-  return router
+  return router;
 }
 
 module.exports = factory;
