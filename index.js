@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 
-const Player=require("./player/model")
+const Player = require("./player/model")
+const Game = require('./game/model')
+const User = require('./user/model')
 const Sse = require("json-sse");
 const playerRouterFactory = require("./player/router");
 const stream = new Sse();
@@ -13,8 +15,8 @@ const jsonParser = bodyParser.json();
 const cors = require("cors");
 const corsMiddleware = cors();
 const loginRouter = require("./auth/router");
-const gameRouter = require("./game/router");
-
+const gameRouterFactory = require("./game/router");
+const gameRouter = gameRouterFactory(stream);
 
 app.use(corsMiddleware);
 app.use(jsonParser);
@@ -30,16 +32,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/stream", async (req, res) => {
-  
+
   try {
-    const players = await Player.findAll(); 
-    const action={
-      type:"ALL_PLAYERS",
-      payload: players
+    const games = await Game.findAll({ include: [{ model: User, attributes: ['id', 'name'] }] });
+    const action = {
+      type: "ALL_GAMES",
+      payload: games
     }
-    const string = JSON.stringify(action); 
-    stream.updateInit(string); 
-    stream.init(req, res); 
+    const string = JSON.stringify(action);
+    stream.updateInit(string);
+    stream.init(req, res);
   } catch (error) {
     next(error);
   }
