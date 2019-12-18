@@ -23,8 +23,10 @@ const Figure = sequelize.define("figures", {
   }
 });
 
-Figure.belongsTo(User, {through: Player});
+Figure.belongsTo(User, { through: Player });
 Figure.belongsTo(Game);
+User.hasMany(Figure)
+Game.hasMany(Figure)
 
 
 module.exports = Figure;

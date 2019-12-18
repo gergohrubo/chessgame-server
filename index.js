@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 
 const Player = require("./player/model")
+const Figure = require('./figure/model')
 const Game = require('./game/model')
 const User = require('./user/model')
 const Sse = require("json-sse");
@@ -36,10 +37,10 @@ app.get("/", (req, res) => {
   res.send("Blabla");
 });
 
-app.get("/stream", async (req, res) => {
+app.get("/stream", async (req, res, next) => {
 
   try {
-    const games = await Game.findAll({ include: [{ model: User, attributes: ['id', 'name'] }] });
+    const games = await Game.findAll({ include: [{ model: User, attributes: ['id', 'name'] }, Figure] });
     const action = {
       type: "ALL_GAMES",
       payload: games
