@@ -11,8 +11,8 @@ router.post("/user", async (req, res, next) => {
       // email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10)
     };
-    const createUser = await User.create(user);
-    res.send(createUser);
+    const createdUser = await User.create(user);
+    res.send(createdUser);
   } catch (error) {
     next(error);
   }

@@ -25,12 +25,12 @@ router.post("/player", async (req, res, next) =>{
   //   const data = toData(auth[1])
   //   res.send({data})
   try {
-    console.log('THE JWT',req.body.jwt)
-    console.log('THE TYPE', typeof req.body.jwt)
-    const {userId} = toData(req.body.jwt)
-    console.log('THE USER ID', userId)
-    console.log('THE TYPE OF USER ID', typeof userId)
-    const player = await Player.create({userId, gameId:req.body.gameId});  //userId, gameId:req.body.gameId}
+    // console.log('THE JWT',req.body.jwt)
+    // console.log('THE TYPE', typeof req.body.jwt)
+    // const {userId} = toData(req.body.jwt)
+    // console.log('THE USER ID', userId)
+    // console.log('THE TYPE OF USER ID', typeof userId)
+    const player = await Player.create({userId, gameId:req.body.gameId});
 
 const action={
   type:"NEW_PLAYER",
