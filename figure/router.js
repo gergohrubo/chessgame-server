@@ -146,13 +146,20 @@ function factory(stream) {
         //   type: "UPDATE_BOARD",
         //   payload: board
         // };
+        const checkAction = {
+          type: 'CHECK'
+        }
+
+        const checkString = JSON.stringify(checkAction)
 
         const string = JSON.stringify(action);
+
+
 
         stream.send(string);
 
         if (isTheKingInCheck) {
-          return res.status(402).send('Check')
+          stream.send(checkString)
         }
         //res.send(board);
         res.send(games)
