@@ -18,7 +18,10 @@ function factory(stream) {
   router.put("/move", async (req, res, next) => {
     try {
       const { userId } = toData(req.body.jwt);
-      const game = await Game.findOne({ where: { id: req.body.gameId } });
+      const game = await Game.findOne({ where: { id: req.body.gameId }, include: [{ model: User, attributes: ['id', 'name'] }, Figure] });
+      if (game.users && game.users.length < 2) {
+        return res.status(400).send('Wait for the other player to join')
+      }
       if (userId != game.currentTurn) {
         res.status(400).send("It's not your turn now.");
       } else {
@@ -39,25 +42,31 @@ function factory(stream) {
         const isItAHittingMove = isThereAFigure ? true : false
         switch (selectedFigure.kind) {
           case 'Bishop': {
-            if (!checkBishop(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y)) {
+            console.log('BISHOP')
+            const isItValid = await checkBishop(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, req.body.gameId)
+            if (!isItValid) {
+              console.log('THIS SHOULD NOT GO IN')
               return res.status(401).send('Invalid move with this piece')
             }
             break;
           }
           case 'Rook': {
-            if (!checkRook(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y)) {
+            const isItValid = await checkRook(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, req.body.gameId)
+            if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
             }
             break;
           }
           case 'Pawn': {
-            if (!checkPawn(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, selectedFigure.color, isItAHittingMove)) {
+            const isItValid = await checkPawn(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, selectedFigure.color, isItAHittingMove, req.body.gameId)
+            if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
             }
             break;
           }
           case 'King': {
-            if (!checkKing(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y)) {
+            const isItValid = await checkKing(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, selectedFigure.color, req.body.gameId)
+            if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
             }
             break;
@@ -69,7 +78,8 @@ function factory(stream) {
             break;
           }
           case 'Queen': {
-            if (!checkQueen(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y)) {
+            const isItValid = await checkQueen(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, req.body.gameId)
+            if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
             }
             break;
