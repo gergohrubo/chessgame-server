@@ -17,6 +17,7 @@ function factory(stream) {
 
   router.put("/move", async (req, res, next) => {
     try {
+      let isTheKingInCheck = false
       const { userId } = toData(req.body.jwt);
       const game = await Game.findOne({ where: { id: req.body.gameId }, include: [{ model: User, attributes: ['id', 'name'] }, Figure] });
       if (game.users && game.users.length < 2) {
@@ -54,6 +55,13 @@ function factory(stream) {
             const isItValid = await checkRook(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, req.body.gameId)
             if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
+            }
+            const opponentKing = await Figure.findOne({ where: { kind: 'King', color: { [Sequelize.Op.not]: selectedFigure.color }, gameId: req.body.gameId } })
+            console.log('THE ENEMY KING IS', opponentKing)
+            const isItCheck = await checkRook(req.body.coordinate_X, req.body.coordinate_Y, opponentKing.coordinate_X, opponentKing.coordinate_Y, req.body.gameId)
+            console.log('IS IT CHECK', isItCheck)
+            if (isItCheck) {
+              isTheKingInCheck = true
             }
             break;
           }
@@ -130,6 +138,9 @@ function factory(stream) {
 
         stream.send(string);
 
+        if (isTheKingInCheck) {
+          return res.status(402).send('Check')
+        }
         //res.send(board);
         res.send(games)
       }
