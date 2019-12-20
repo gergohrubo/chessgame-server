@@ -49,6 +49,11 @@ function factory(stream) {
               console.log('THIS SHOULD NOT GO IN')
               return res.status(401).send('Invalid move with this piece')
             }
+            const opponentKing = await Figure.findOne({ where: { kind: 'King', color: { [Sequelize.Op.not]: selectedFigure.color }, gameId: req.body.gameId } })
+            const isItCheck = await checkBishop(req.body.coordinate_X, req.body.coordinate_Y, opponentKing.coordinate_X, opponentKing.coordinate_Y, req.body.gameId)
+            if (isItCheck) {
+              isTheKingInCheck = true
+            }
             break;
           }
           case 'Rook': {
@@ -57,9 +62,7 @@ function factory(stream) {
               return res.status(401).send('Invalid move with this piece')
             }
             const opponentKing = await Figure.findOne({ where: { kind: 'King', color: { [Sequelize.Op.not]: selectedFigure.color }, gameId: req.body.gameId } })
-            console.log('THE ENEMY KING IS', opponentKing)
             const isItCheck = await checkRook(req.body.coordinate_X, req.body.coordinate_Y, opponentKing.coordinate_X, opponentKing.coordinate_Y, req.body.gameId)
-            console.log('IS IT CHECK', isItCheck)
             if (isItCheck) {
               isTheKingInCheck = true
             }
@@ -83,12 +86,22 @@ function factory(stream) {
             if (!checkKnight(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y)) {
               return res.status(401).send('Invalid move with this piece')
             }
+            const opponentKing = await Figure.findOne({ where: { kind: 'King', color: { [Sequelize.Op.not]: selectedFigure.color }, gameId: req.body.gameId } })
+            const isItCheck = await checkKnight(req.body.coordinate_X, req.body.coordinate_Y, opponentKing.coordinate_X, opponentKing.coordinate_Y, req.body.gameId)
+            if (isItCheck) {
+              isTheKingInCheck = true
+            }
             break;
           }
           case 'Queen': {
             const isItValid = await checkQueen(selectedFigure.coordinate_X, selectedFigure.coordinate_Y, req.body.coordinate_X, req.body.coordinate_Y, req.body.gameId)
             if (!isItValid) {
               return res.status(401).send('Invalid move with this piece')
+            }
+            const opponentKing = await Figure.findOne({ where: { kind: 'King', color: { [Sequelize.Op.not]: selectedFigure.color }, gameId: req.body.gameId } })
+            const isItCheck = await checkQueen(req.body.coordinate_X, req.body.coordinate_Y, opponentKing.coordinate_X, opponentKing.coordinate_Y, req.body.gameId)
+            if (isItCheck) {
+              isTheKingInCheck = true
             }
             break;
           }
