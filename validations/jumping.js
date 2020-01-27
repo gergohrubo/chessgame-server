@@ -2,8 +2,6 @@ const buildHorizontal = (initial_X, goal_X, initial_Y) => {
   const result = [];
   const difference = Math.abs(initial_X - goal_X);
   for (let i = 1; i < difference; i++) {
-    console.log('IF X IS TRUE', goal_X < initial_X)
-    console.log('X EXPRESSION', goal_X < initial_X ? initial_X - i : initial_X + i)
     const calculateGoalPosition = (goal_X, initial_X, i) =>
       goal_X < initial_X ? initial_X - i : initial_X + i;
     result.push({
@@ -17,8 +15,6 @@ const buildVertical = (initial_X, initial_Y, goal_Y) => {
   const result = [];
   const difference = Math.abs(initial_Y - goal_Y);
   for (let i = 1; i < difference; i++) {
-    console.log('IF Y IS TRUE', goal_Y < initial_Y)
-    console.log('Y EXPRESSION', goal_Y < initial_Y ? initial_Y - i : initial_Y + i)
     const calculateGoalPosition = (goal_Y, initial_Y, i) =>
       goal_Y < initial_Y ? initial_Y - i : initial_Y + i;
     result.push({
@@ -32,12 +28,7 @@ const buildVertical = (initial_X, initial_Y, goal_Y) => {
 const buildDiagonal = (initial_X, goal_X, initial_Y, goal_Y) => {
   const result = [];
   const difference = Math.abs(initial_Y - goal_Y);
-  console.log('DIFFERENCE', difference)
   for (let i = 1; i < difference; i++) {
-    console.log('IF X IS TRUE', goal_X < initial_X)
-    console.log('X EXPRESSION', goal_X < initial_X ? initial_X - i : initial_X + i)
-    console.log('IF Y IS TRUE', goal_Y < initial_Y)
-    console.log('Y EXPRESSION', goal_Y < initial_Y ? initial_Y - i : initial_Y + i)
     const calculateGoalPosition_X = (goal_X, initial_X, i) =>
       goal_X < initial_X ? initial_X - i : initial_X + i;
     const calculateGoalPosition_Y = (goal_Y, initial_Y, i) =>
@@ -47,7 +38,6 @@ const buildDiagonal = (initial_X, goal_X, initial_Y, goal_Y) => {
       y: calculateGoalPosition_Y(initial_Y, goal_Y, i)
     });
   }
-  console.log('RESULT', result)
   return result;
 };
 

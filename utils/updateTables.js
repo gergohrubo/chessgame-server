@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const Player = require("../player/model");
-const Figure = require("./model");
+const Figure = require("../figure/model");
 const Game = require('../game/model')
 const User = require('../user/model')
 
