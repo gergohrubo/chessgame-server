@@ -141,11 +141,6 @@ function factory(stream) {
           type: "ALL_GAMES",
           payload: games
         }
-
-        // const action = {
-        //   type: "UPDATE_BOARD",
-        //   payload: board
-        // };
         const checkAction = {
           type: 'CHECK'
         }
@@ -161,7 +156,6 @@ function factory(stream) {
         if (isTheKingInCheck) {
           stream.send(checkString)
         }
-        //res.send(board);
         res.send(games)
       }
     } catch (err) {

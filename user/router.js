@@ -8,7 +8,6 @@ router.post("/user", async (req, res, next) => {
   try {
     const user = {
       name: req.body.name,
-      // email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10)
     };
     const createdUser = await User.create(user);

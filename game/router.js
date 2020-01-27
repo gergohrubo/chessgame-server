@@ -6,11 +6,6 @@ const Player = require("../player/model");
 const Figure = require("../figure/model");
 const User = require("../user/model");
 
-// router.get("/game", async (req, res) => {
-//   const game = await Game.findAll({ include: [{ model: User, attributes: ['id', 'name'] }] });
-//   res.send(game);
-// });
-
 const createWhiteFigures = async (userId, gameId) => {
   await Promise.all([
     Figure.create({
