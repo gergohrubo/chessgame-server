@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { toData } = require("../auth/jwt");
+const authMiddleware = require('../auth/middleware')
 const Game = require("./model");
 const { createWhiteFigures, createBlackFigures } = require('../utils/setUpBoard')
 
@@ -10,9 +11,9 @@ const User = require("../user/model");
 function factory(stream) {
   const router = new Router();
 
-  router.post("/join", async (req, res, next) => {
+  router.post("/join", authMiddleware, async (req, res, next) => {
     try {
-      const { userId } = toData(req.body.jwt);
+      const userId = req.user.id
       const player = await Player.create({
         gameId: req.body.gameId,
         userId,
@@ -42,7 +43,7 @@ function factory(stream) {
     }
   });
 
-  router.post("/game", async (req, res, next) => {
+  router.post("/game", authMiddleware, async (req, res, next) => {
     try {
       const game = {
         username: req.body.name

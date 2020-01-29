@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const authMiddleware = require('../auth/middleware')
 const Figure = require("./model");
 const Game = require('../game/model')
 const User = require('../user/model')
@@ -8,9 +9,10 @@ const updateTables = require('../utils/updateTables')
 
 function factory(stream) {
   const router = new Router();
-  router.put("/move", async (req, res, next) => {
+  router.put("/move", authMiddleware, async (req, res, next) => {
     try {
-      const { userId } = toData(req.body.jwt);
+      const userId = req.user.id;
+      console.log('THE USER ID', userId)
       const game = await Game.findOne({ where: { id: req.body.gameId }, include: [{ model: User, attributes: ['id', 'name'] }, Figure] });
       if (game.users && game.users.length < 2) {
         return res.status(400).send('Wait for the other player to join')
