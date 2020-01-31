@@ -12,7 +12,6 @@ function factory(stream) {
   router.put("/move", authMiddleware, async (req, res, next) => {
     try {
       const userId = req.user.id;
-      console.log('THE USER ID', userId)
       const game = await Game.findOne({ where: { id: req.body.gameId }, include: [{ model: User, attributes: ['id', 'name'] }, Figure] });
       if (game.users && game.users.length < 2) {
         return res.status(400).send('Wait for the other player to join')
