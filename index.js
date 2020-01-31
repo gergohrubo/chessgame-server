@@ -6,9 +6,7 @@ const Figure = require('./figure/model')
 const Game = require('./game/model')
 const User = require('./user/model')
 const Sse = require("json-sse");
-const playerRouterFactory = require("./player/router");
 const stream = new Sse();
-const playerRouter = playerRouterFactory(stream);
 
 
 
@@ -29,7 +27,6 @@ const port = process.env.PORT || 4000;
 app.use(userRouter);
 app.use(loginRouter);
 app.use(gameRouter);
-app.use(playerRouter);
 app.use(figureRouter);
 
 app.get("/", (req, res) => {

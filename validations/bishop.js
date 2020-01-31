@@ -13,9 +13,7 @@ module.exports = async function (initial_X, initial_Y, goal_X, goal_Y, gameId) {
     const squares = buildDiagonal(initial_X, goal_X, initial_Y, goal_Y)
     const promises = squares.map(async square => Figure.findOne({ where: { coordinate_X: square.x, coordinate_Y: square.y, gameId: gameId } }))
     const whatIsThere = await Promise.all(promises)
-    console.log('BISHOP WHATISTHERE', whatIsThere)
     const isThereSomething = whatIsThere.reduce((a, b) => { return (Boolean(a) || Boolean(b)) }, false)
-    console.log('BISHOP ISTHERESOMETHING', isThereSomething)
     return !isThereSomething
   } else {
     return false
