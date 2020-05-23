@@ -8,7 +8,7 @@ const User = require('./user/model')
 const Sse = require("json-sse");
 const stream = new Sse();
 
-
+console.log('blablabla')
 
 const userRouter = require("./user/router");
 const bodyParser = require("body-parser");
